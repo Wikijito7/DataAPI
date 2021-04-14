@@ -2,10 +2,10 @@
 A custom API made in Ktor using Kotlin.
 
 ## Index
-* [Pre-requisites]()
-* [How to run it]()
-* [How it works]()
-* [TODO]()
+* [Pre-requisites](https://github.com/Wikijito7/DataAPI/blob/main/README.md#pre-requisites)
+* [How to run it](https://github.com/Wikijito7/DataAPI/blob/main/README.md#how-to-run-it)
+* [How it works](https://github.com/Wikijito7/DataAPI/blob/main/README.md#how-it-works)
+* [TODO](https://github.com/Wikijito7/DataAPI/blob/main/README.md#todo)
 
 ## Pre-requisites
 * Java 8+.
