@@ -17,7 +17,7 @@ A custom API made in Ktor using Kotlin.
 * First of all, let's make sure we've got java install. To do so, run `java --version`, if we see a message like `openjdk 11.0.10 2021-01-19` or Oracle's version, it's fine, we can continue. If not, install the last java version and come back.
 * Execute the jar:
     * Option 1: Download the latest jar uploaded (TODO) 
-    * Option 2: Clone the project and compile the code. To do so, download it from the green button at the top or execute `git clone https://github.com/Wikijito7/DataAPI.git`. Once downloaded, we can modify some parameters of the [config](https://github.com/Wikijito7/DataAPI/blob/main/resources/application.conf) file or leave it as it is. After that, open a terminal and execute `./gradlew clean jar` if you're in UNIX, Linux Distro or MacOS, or `./gradlew.bat clean jar` if you're on Windows.
+    * Option 2: Clone the project and compile the code. To do so, download it from the green button at the top or execute `git clone https://github.com/Wikijito7/DataAPI.git`. Once downloaded, we can modify some parameters of the [config](https://github.com/Wikijito7/DataAPI/blob/main/resources/application.conf) file or leave it as it is. After that, open a terminal and execute `./gradlew clean shadowJar` if you're in UNIX, Linux Distro or MacOS, or `./gradlew.bat clean shadowJar` if you're on Windows.
 * We're almost done! Now execute the jar, to do so open a terminal and execute `java -jar DataAPI-$version.jar`. Remember to replace `$version` with the version you're downloaded/compiled.
 * We've finished! Now you can start using the API.
 
@@ -30,7 +30,7 @@ This API is a REST API, it means that serves data using JSON. To use it, we have
 * `/`: `HELLO WORLD!`. We can use this direction to make sure we can communicate with the API.
 * `/token`: This is how we obtain our token and a hash. The hash is our client-id, we can obtain our token with the hash, and the hash with the token. **DO NOT LOSE THEM**, once lost, we cannot access to our data.
 * `/token/{hash}`: As i mentioned before, we can obtain our token if we know our hash. This is the way.
-### Request WITH Auth
+### Requests WITH Auth
 If we're not authenticated, it will respond with a `401 Unauthorized`.
 #### Get
 * `/data`: It responds with the data in a list, even if it is empty. It can respond with a `404 Not Found` if somehow the token is valid but the hash doesn't exists in the database.
