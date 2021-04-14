@@ -4,8 +4,8 @@ import es.wokis.dataapi.dto.DataDTO
 import es.wokis.dataapi.models.Data
 
 interface IDataDAO {
-    fun getData(hash: String): List<DataDTO>?
-    fun getData(hash: String, dataId: Int): DataDTO?
+    fun getDataList(hash: String): List<DataDTO>?
+    fun getDataList(hash: String, dataId: Int): DataDTO?
     fun getDataDB(hash: String, dataId: Int): Data?
     fun insertData(hash: String, data: List<DataDTO>): Boolean
     fun updateData(dataId: Int, hash: String): Boolean

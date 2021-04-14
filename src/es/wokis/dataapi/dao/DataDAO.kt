@@ -9,12 +9,12 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class DataDAO : IDataDAO {
-    override fun getData(hash: String): List<DataDTO>? {
+    override fun getDataList(hash: String): List<DataDTO>? {
         val dataList: MutableList<DataDTO> = mutableListOf()
         val credential: Credential = CredentialsDAO().findByHash(hash) ?: return null
 
         transaction {
-            val images = Data.find { Datas.uploadBy eq credential.id }
+            val images = Data.find { Datas.uploadBy eq credential.id }.sortedBy { Datas.dataId }
             images.forEach {
                 val imageDTO = DataDTO(it.dataId, it.title, it.description, it.urlImage,
                     it.isFavorite)
@@ -26,7 +26,7 @@ class DataDAO : IDataDAO {
         return dataList
     }
 
-    override fun getData(hash: String, dataId: Int): DataDTO? {
+    override fun getDataList(hash: String, dataId: Int): DataDTO? {
         var image: DataDTO? = null
         val imageDB = getDataDB(hash, dataId)
 

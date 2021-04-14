@@ -13,7 +13,7 @@ import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import es.wokis.utils.user
+import es.wokis.dataapi.utils.user
 import io.ktor.request.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,6 +24,9 @@ private val gson = Gson()
 
 fun Application.initRoutes() {
     routing {
+        get("/") {
+            call.respond(HttpStatusCode.OK,"HELLO WORLD!")
+        }
         get("/token") {
             val generatedHash = HashGenerator.generateHash(12L)
             val token = generateToken(generatedHash)
@@ -46,14 +49,14 @@ fun Application.initRoutes() {
         }
 
         authenticate {
-            get("/hash") {
+            post("/hash") {
                 call.respond(HttpStatusCode.OK, "${call.user?.hash}")
             }
 
             get("/data") {
                 val hash = call.user?.hash
                 if (hash != null) {
-                    val data = dataDAO.getData(hash)
+                    val data = dataDAO.getDataList(hash)
 
                     if (data != null){
                         call.respond(gson.toJson(data))
@@ -96,12 +99,19 @@ fun Application.initRoutes() {
 
             }
 
-            put("/data/") {
-                // siguiendo lo de arriba, si es un objeto SI está en UTF-8.. ah bueno, se me cuida
-                val dataId = call.parameters["id"]
+            put("/data") {
                 val data = call.receive<DataDTO>()
+                val hash = call.user?.hash
 
-                // TODO: Implementar llamada completa del update
+                if (hash != null) {
+                    if (dataDAO.updateData(data, hash)) {
+                        call.respond(HttpStatusCode.OK,
+                            gson.toJson(dataDAO.getDataList(hash, data.id) ?: ""))
+                    } else {
+                        call.respond(HttpStatusCode.NotFound,
+                            "No data found")
+                    }
+                }
             }
 
             put("/data/{id}") {
@@ -111,10 +121,10 @@ fun Application.initRoutes() {
                 if (hash != null && dataId != null) {
                     if (dataDAO.updateData(dataId, hash)) {
                         call.respond(HttpStatusCode.OK,
-                            gson.toJson(dataDAO.getData(hash, dataId) ?: ""))
+                            gson.toJson(dataDAO.getDataList(hash, dataId) ?: ""))
                     } else {
-                        call.respond(HttpStatusCode.InternalServerError,
-                            "Try again later, imageId: $dataId")
+                        call.respond(HttpStatusCode.NotFound,
+                            "Are you sure it exists? dataId: $dataId")
                     }
                 }
             }
@@ -124,7 +134,7 @@ fun Application.initRoutes() {
                 val hash = call.user?.hash
 
                 if (hash != null && dataId != null) {
-                    if (dataDAO.updateData(dataId, hash)) {
+                    if (dataDAO.deleteData(dataId, hash)) {
                         call.respond(HttpStatusCode.OK, dataId)
                     } else {
                         call.respond(HttpStatusCode.InternalServerError,

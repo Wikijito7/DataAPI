@@ -1,4 +1,4 @@
-package es.wokis.utils
+package es.wokis.dataapi.utils
 
 import es.wokis.dataapi.dto.CredentialsDTO
 import io.ktor.application.*
