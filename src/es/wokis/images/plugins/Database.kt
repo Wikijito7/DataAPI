@@ -2,8 +2,8 @@ package es.wokis.images.plugins
 
 import es.wokis.images.models.Credential
 import es.wokis.images.models.Credentials
-import es.wokis.images.models.Image
-import es.wokis.images.models.Images
+import es.wokis.images.models.Data
+import es.wokis.images.models.Datas
 import io.ktor.application.*
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database
@@ -21,7 +21,7 @@ fun Application.initDatabase() {
 
     transaction {
         // Creamos las tablas si no existen
-        SchemaUtils.create(Images, Credentials)
+        SchemaUtils.create(Datas, Credentials)
         // datos de serie, podemos borrarlo. Solo se insertan una vez.
         try {
             val credential = Credential.new {
@@ -29,8 +29,8 @@ fun Application.initDatabase() {
                 createdOn = LocalDate.now()
             }
 
-            val image = Image.new {
-                imageId = 0
+            val image = Data.new {
+                dataId = 0
                 title = "Abstract"
                 description = "Arte abstracto, no tiene más!"
                 urlImage = "https://images.unsplash.com/photo-1615012553971-f7251c225e01?i" +

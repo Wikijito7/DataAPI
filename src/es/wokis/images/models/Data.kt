@@ -5,8 +5,8 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
-object Images : IntIdTable() {
-    val imageId = integer("imageId")
+object Datas : IntIdTable() {
+    val dataId = integer("dataId")
     val title = varchar("title", 100)
     val description = text("description", eagerLoading = true)
     val urlImage = varchar("urlImage", 255)
@@ -14,17 +14,17 @@ object Images : IntIdTable() {
     val uploadBy = reference("hash", Credentials)
 }
 
-class Image(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Image>(Images)
-    var imageId by Images.imageId
-    var title by Images.title
-    var description by Images.description
-    var urlImage by Images.urlImage
-    var isFavorite by Images.isFavorite
-    var uploadBy by Credential referencedOn Images.uploadBy
+class Data(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Data>(Datas)
+    var dataId by Datas.dataId
+    var title by Datas.title
+    var description by Datas.description
+    var urlImage by Datas.urlImage
+    var isFavorite by Datas.isFavorite
+    var uploadBy by Credential referencedOn Datas.uploadBy
 
     override fun toString(): String {
-        return "Image(id: $imageId, title: $title, description: $description, url: $urlImage, " +
+        return "Data(id: $dataId, title: $title, description: $description, url: $urlImage, " +
                 "uploadBy: $uploadBy)"
     }
 }
