@@ -137,8 +137,8 @@ fun Application.initRoutes() {
                     if (dataDAO.deleteData(dataId, hash)) {
                         call.respond(HttpStatusCode.OK, dataId)
                     } else {
-                        call.respond(HttpStatusCode.InternalServerError,
-                            "Try again later, imageId: $dataId")
+                        call.respond(HttpStatusCode.NotFound,
+                            "Are you sure it exists? dataId: $dataId")
                     }
                 }
             }
