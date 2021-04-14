@@ -42,7 +42,8 @@ fun Application.initDatabase() {
 
             println("credential: $credential, image: $image")
         } catch (e: ExposedSQLException) {
-            println("Creo que ha habido un error, puede que no sea importante, peeero: ${e.message}")
+            environment.log.warn("[database] Creo que ha habido un error, puede que no sea " +
+                    "importante, peeero: ${e.message}")
         }
 
     }

@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private val credentialsDao = CredentialsDAO()
-private val imagesDAO = DataDAO()
+private val dataDAO = DataDAO()
 private val gson = Gson()
 
 fun Application.initRoutes() {
@@ -53,10 +53,10 @@ fun Application.initRoutes() {
             get("/data") {
                 val hash = call.user?.hash
                 if (hash != null) {
-                    val images = imagesDAO.getData(hash)
+                    val data = dataDAO.getData(hash)
 
-                    if (images != null){
-                        call.respond(gson.toJson(images))
+                    if (data != null){
+                        call.respond(gson.toJson(data))
                     } else {
                         call.respond(HttpStatusCode.NotFound)
                     }
@@ -73,13 +73,13 @@ fun Application.initRoutes() {
                     // tiramos de asincronía para poder mantener el encoding.. because why not ktor
                     withContext(Dispatchers.IO) {
                         val json = call.receiveTextWithCorrectEncoding()
-                        val imageList = Gson().fromJson(json, Array<DataDTO>::class.java).toList()
+                        val dataListJson = Gson().fromJson(json, Array<DataDTO>::class.java).toList()
                         val hash = call.user?.hash
                         if (hash != null) {
-                            val images = imagesDAO.insertData(hash, imageList)
+                            val dataList = dataDAO.insertData(hash, dataListJson)
 
-                            if (images){
-                                call.respond(HttpStatusCode.OK, gson.toJson(imageList))
+                            if (dataList){
+                                call.respond(HttpStatusCode.OK, gson.toJson(dataListJson))
                             } else {
                                 call.respond(HttpStatusCode.BadRequest)
                             }
@@ -98,18 +98,38 @@ fun Application.initRoutes() {
 
             put("/data/") {
                 // siguiendo lo de arriba, si es un objeto SI está en UTF-8.. ah bueno, se me cuida
-                val imageId = call.parameters["id"]
-                val image = call.receive<DataDTO>()
+                val dataId = call.parameters["id"]
+                val data = call.receive<DataDTO>()
 
-
+                // TODO: Implementar llamada completa del update
             }
 
             put("/data/{id}") {
-                val imageId = call.parameters["id"]?.toInt()
+                val dataId = call.parameters["id"]?.toInt()
                 val hash = call.user?.hash
 
-                if (hash != null && imageId != null) {
-                    imagesDAO.updateData(imageId, hash)
+                if (hash != null && dataId != null) {
+                    if (dataDAO.updateData(dataId, hash)) {
+                        call.respond(HttpStatusCode.OK,
+                            gson.toJson(dataDAO.getData(hash, dataId) ?: ""))
+                    } else {
+                        call.respond(HttpStatusCode.InternalServerError,
+                            "Try again later, imageId: $dataId")
+                    }
+                }
+            }
+
+            delete("/data/{id}") {
+                val dataId = call.parameters["id"]?.toInt()
+                val hash = call.user?.hash
+
+                if (hash != null && dataId != null) {
+                    if (dataDAO.updateData(dataId, hash)) {
+                        call.respond(HttpStatusCode.OK, dataId)
+                    } else {
+                        call.respond(HttpStatusCode.InternalServerError,
+                            "Try again later, imageId: $dataId")
+                    }
                 }
             }
 

@@ -3,6 +3,7 @@ package es.wokis.images.plugins
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
+import es.wokis.images.dao.CredentialsDAO
 import es.wokis.images.dto.CredentialsDTO
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -21,9 +22,13 @@ fun Application.initAuth() {
             realm = jwtRealm
             verifier(makeJwtVerifier())
             validate { credential ->
-                val token = credential.payload.claims["token"]?.asString()
-                if (token != null)
-                    CredentialsDTO(token) else null
+                val hash = credential.payload.claims["token"]?.asString()
+                if (hash != null) {
+                    val credentialObj = CredentialsDAO().findByHash(hash)
+
+                    if (credentialObj != null)
+                        CredentialsDTO(credentialObj.hash) else null
+                } else null
             }
         }
     }
@@ -34,7 +39,7 @@ private fun makeJwtVerifier() : JWTVerifier = JWT
     .require(algorithm)
     .build()
 
-fun generateToken(randomHash: String): String = JWT.create()
+fun generateToken(hash: String): String = JWT.create()
     .withSubject("Authentification")
-    .withClaim("token", randomHash)
+    .withClaim("token", hash)
     .sign(algorithm)

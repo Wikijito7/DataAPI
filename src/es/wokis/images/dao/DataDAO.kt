@@ -39,16 +39,17 @@ class DataDAO : IDataDAO {
     }
 
     override fun getDataDB(hash: String, dataId: Int): Data? {
-        var image: Data? = null
+        var data: Data? = null
         val credential: Credential = CredentialsDAO().findByHash(hash) ?: return null
+
         transaction {
-            image = Data.find {
-                Datas.uploadBy eq credential.id
-                Datas.dataId eq dataId
-            }.singleOrNull()
+            val dataDB = Data.find { Datas.uploadBy eq credential.id }
+                .filter { it.dataId == dataId }
+
+            data = if (dataDB.size == 1) dataDB[0] else null
         }
 
-        return image
+        return data
     }
 
     override fun insertData(hash: String, data: List<DataDTO>): Boolean {
@@ -76,10 +77,38 @@ class DataDAO : IDataDAO {
     }
 
     override fun updateData(dataId: Int, hash: String): Boolean {
-        val image = getDataDB(hash, dataId) ?: return false
+        val data = getDataDB(hash, dataId) ?: return false
+
         transaction {
-            image.isFavorite = true
+            data.isFavorite = true
+            commit()
         }
+
+        return true
+    }
+
+    override fun updateData(data: DataDTO, hash: String): Boolean {
+        val dataDB = getDataDB(hash, data.id) ?: return false
+
+        transaction {
+            dataDB.title = data.title
+            dataDB.description = data.description
+            dataDB.urlImage = data.urlImage
+            dataDB.isFavorite = data.isFavorite
+            commit()
+        }
+
+        return true
+    }
+
+    override fun deleteData(dataId: Int, hash: String): Boolean {
+        val data = getDataDB(hash, dataId) ?: return false
+
+        transaction {
+            data.delete()
+            commit()
+        }
+
         return true
     }
 }

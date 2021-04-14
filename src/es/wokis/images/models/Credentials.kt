@@ -16,7 +16,6 @@ class Credential(id: EntityID<Int>): IntEntity(id) {
     companion object: IntEntityClass<Credential>(Credentials)
     var hash by Credentials.hash
     var createdOn by Credentials.createdOn
-
     override fun toString(): String {
         return "Credential(token: $hash, createdOn: $createdOn)"
     }

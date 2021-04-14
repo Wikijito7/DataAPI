@@ -4,6 +4,7 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.ReferenceOption
 
 object Datas : IntIdTable() {
     val dataId = integer("dataId")
@@ -11,7 +12,7 @@ object Datas : IntIdTable() {
     val description = text("description", eagerLoading = true)
     val urlImage = varchar("urlImage", 255)
     val isFavorite = bool("isFavorite")
-    val uploadBy = reference("hash", Credentials)
+    val uploadBy = reference("hash", Credentials, ReferenceOption.CASCADE)
 }
 
 class Data(id: EntityID<Int>) : IntEntity(id) {
