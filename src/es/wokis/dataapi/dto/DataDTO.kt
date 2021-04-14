@@ -1,4 +1,4 @@
-package es.wokis.images.dto
+package es.wokis.dataapi.dto
 
 import com.google.gson.annotations.SerializedName
 

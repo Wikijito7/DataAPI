@@ -1,6 +1,6 @@
-package es.wokis.images.dao.interfaces
+package es.wokis.dataapi.dao.interfaces
 
-import es.wokis.images.models.Credential
+import es.wokis.dataapi.models.Credential
 
 interface ICredentialsDAO {
     fun insertHash(hash: String): Boolean

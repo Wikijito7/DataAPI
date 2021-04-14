@@ -1,7 +1,7 @@
-package es.wokis.images.dao.interfaces
+package es.wokis.dataapi.dao.interfaces
 
-import es.wokis.images.dto.DataDTO
-import es.wokis.images.models.Data
+import es.wokis.dataapi.dto.DataDTO
+import es.wokis.dataapi.models.Data
 
 interface IDataDAO {
     fun getData(hash: String): List<DataDTO>?

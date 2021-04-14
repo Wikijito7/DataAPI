@@ -1,13 +1,13 @@
-package es.wokis.images.plugins
+package es.wokis.dataapi.plugins
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import es.wokis.images.dao.CredentialsDAO
-import es.wokis.images.dao.DataDAO
-import es.wokis.images.dto.DataDTO
-import es.wokis.images.dto.TokenHashDTO
-import es.wokis.images.generator.HashGenerator
-import es.wokis.images.utils.receiveTextWithCorrectEncoding
+import es.wokis.dataapi.dao.CredentialsDAO
+import es.wokis.dataapi.dao.DataDAO
+import es.wokis.dataapi.dto.DataDTO
+import es.wokis.dataapi.dto.TokenHashDTO
+import es.wokis.dataapi.generator.HashGenerator
+import es.wokis.dataapi.utils.receiveTextWithCorrectEncoding
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*

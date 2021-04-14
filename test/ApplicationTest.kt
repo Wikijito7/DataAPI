@@ -1,6 +1,6 @@
 package es.wokis
 
-import es.wokis.images.module
+import es.wokis.dataapi.module
 import io.ktor.http.*
 import kotlin.test.*
 import io.ktor.server.testing.*

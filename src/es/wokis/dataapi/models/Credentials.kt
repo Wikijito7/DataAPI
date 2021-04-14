@@ -1,4 +1,4 @@
-package es.wokis.images.models
+package es.wokis.dataapi.models
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass

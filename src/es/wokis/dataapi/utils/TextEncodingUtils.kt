@@ -1,4 +1,4 @@
-package es.wokis.images.utils
+package es.wokis.dataapi.utils
 
 import io.ktor.application.*
 import io.ktor.http.*

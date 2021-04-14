@@ -1,4 +1,4 @@
-package es.wokis.images.generator
+package es.wokis.dataapi.generator
 
 import java.util.*
 import kotlin.streams.asSequence

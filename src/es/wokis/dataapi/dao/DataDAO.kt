@@ -1,10 +1,10 @@
-package es.wokis.images.dao
+package es.wokis.dataapi.dao
 
-import es.wokis.images.dao.interfaces.IDataDAO
-import es.wokis.images.dto.DataDTO
-import es.wokis.images.models.Credential
-import es.wokis.images.models.Data
-import es.wokis.images.models.Datas
+import es.wokis.dataapi.dao.interfaces.IDataDAO
+import es.wokis.dataapi.dto.DataDTO
+import es.wokis.dataapi.models.Credential
+import es.wokis.dataapi.models.Data
+import es.wokis.dataapi.models.Datas
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.transactions.transaction
 

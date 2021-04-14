@@ -1,6 +1,6 @@
 package es.wokis.utils
 
-import es.wokis.images.dto.CredentialsDTO
+import es.wokis.dataapi.dto.CredentialsDTO
 import io.ktor.application.*
 import io.ktor.auth.*
 

@@ -1,9 +1,9 @@
-package es.wokis.images.plugins
+package es.wokis.dataapi.plugins
 
-import es.wokis.images.models.Credential
-import es.wokis.images.models.Credentials
-import es.wokis.images.models.Data
-import es.wokis.images.models.Datas
+import es.wokis.dataapi.models.Credential
+import es.wokis.dataapi.models.Credentials
+import es.wokis.dataapi.models.Data
+import es.wokis.dataapi.models.Datas
 import io.ktor.application.*
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.Database

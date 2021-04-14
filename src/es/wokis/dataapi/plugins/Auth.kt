@@ -1,10 +1,10 @@
-package es.wokis.images.plugins
+package es.wokis.dataapi.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import es.wokis.images.dao.CredentialsDAO
-import es.wokis.images.dto.CredentialsDTO
+import es.wokis.dataapi.dao.CredentialsDAO
+import es.wokis.dataapi.dto.CredentialsDTO
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*

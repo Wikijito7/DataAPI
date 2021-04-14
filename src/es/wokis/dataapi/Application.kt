@@ -1,6 +1,6 @@
-package es.wokis.images
+package es.wokis.dataapi
 
-import es.wokis.images.plugins.*
+import es.wokis.dataapi.plugins.*
 import io.ktor.application.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
