@@ -16,13 +16,17 @@ A custom API made in Ktor using Kotlin.
 ## How to run it
 * First of all, let's make sure we've got java install. To do so, run `java --version`, if we see a message like `openjdk 11.0.10 2021-01-19` or Oracle's version, it's fine, we can continue. If not, install the last java version and come back.
 * Execute the jar:
-    * Option 1: Download the latest jar uploaded (TODO) 
+    * Option 1: Download the latest jar uploaded, simple clicking [here](https://github.com/Wikijito7/DataAPI/releases/) 
     * Option 2: Clone the project and compile the code. To do so, download it from the green button at the top or execute `git clone https://github.com/Wikijito7/DataAPI.git`. Once downloaded, we can modify some parameters of the [config](https://github.com/Wikijito7/DataAPI/blob/main/resources/application.conf) file or leave it as it is. After that, open a terminal and execute `./gradlew clean shadowJar` if you're in UNIX, Linux Distro or MacOS, or `./gradlew.bat clean shadowJar` if you're on Windows.
 * We're almost done! Now execute the jar, to do so open a terminal and execute `java -jar DataAPI-$version.jar`. Remember to replace `$version` with the version you're downloaded/compiled.
 * We've finished! Now you can start using the API.
 
 ## How it works
-This API is a REST API, it means that serves data using JSON. To use it, we have to make calls to different URLs with a Method. In order to communicate with the API we have to add to the header the `Authorization Bearer $token`, replacing `$token` with our token. Let's see the routing closely.
+This API is a REST API, it means that serves data using JSON. To use it, we have to make calls to different URLs with a Method. In order to communicate with the API we have to add to the header the `Authorization Bearer $token`, replacing `$token` with our token. 
+
+It depends on a SQLite Database to store the data. If it doesn't exists, the app will create it on its own. It will be created on `./bd/`, called `database.db`. In there, the app will store the hash, or client-id, and the data every client uploads, having it attached to the user via the hash.
+
+Let's see the routing closely.
 
 ### Requests WITHOUT Auth
 
@@ -67,5 +71,8 @@ If we're not authenticated, it will respond with a `401 Unauthorized`.
 * `/data/{id}`: It delete the item that has the given id. Once deleted it cannot be recovered. It responds with the deleted itemId or a `404 Not Found` if the item doesn't exist.
 
 ## TODO:
-* [ ] Upload JAR.
+* Delete a hash
+* Admin panel using secretkey as hash
+* Hash expiring (customizable)
+* .env file outside of the jar
 * Something else?
