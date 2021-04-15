@@ -78,5 +78,4 @@ If we're not authenticated, it will respond with a `401 Unauthorized`.
 * Something else?
 
 ## Known bugs
-* SSL doesn't work atm.
-* Something else? Create a ticket [here](https://github.com/Wikijito7/DataAPI/issues)
+* Have you found one? Create a ticket [here](https://github.com/Wikijito7/DataAPI/issues)
