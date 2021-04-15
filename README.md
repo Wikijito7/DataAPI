@@ -55,7 +55,7 @@ If we're not authenticated, it will respond with a `401 Unauthorized`.
 * `/hash`: This is the way to get our hash. 
 
 #### Put
-* `/data`: It updates the entire data object given, using the ID as item's identificator, so it cannot be changed. It MUST follow the next pattern:
+* `/data`: It updates the entire data object given, using the ID as item's identificator, so it cannot be changed. It returns the updated object, or `404 Not Found` if no data were found. It MUST follow the next pattern:
 ```
 {
     "id": 0,
@@ -65,7 +65,7 @@ If we're not authenticated, it will respond with a `401 Unauthorized`.
     "isFavorite": true/false
 }
 ```
-* `/data/{id}`: It updates the `isFavorite` parameter from `false` to `true`. It cannot be changed back nor change a `true` one to `false`. It responds with the updated item or a `404 Not Found` if the item doesn't exist.
+* `/data/{id}`: It updates the `isFavorite` parameter, inverting whatever is in there to the opposite, from `true` to `false`, and the other way around. It cannot be changed back nor change a `true` one to `false`. It responds with the updated item or a `404 Not Found` if the item doesn't exist.
 
 #### Delete
 * `/data/{id}`: It delete the item that has the given id. Once deleted it cannot be recovered. It responds with the deleted itemId or a `404 Not Found` if the item doesn't exist.

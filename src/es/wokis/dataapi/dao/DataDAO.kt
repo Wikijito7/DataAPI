@@ -80,7 +80,7 @@ class DataDAO : IDataDAO {
         val data = getDataDB(hash, dataId) ?: return false
 
         transaction {
-            data.isFavorite = true
+            data.isFavorite = !data.isFavorite
             commit()
         }
 

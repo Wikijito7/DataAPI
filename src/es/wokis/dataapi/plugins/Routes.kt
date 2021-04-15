@@ -42,7 +42,7 @@ fun Application.initRoutes() {
             if (hash != null && credentialsDao.getHash(hash) != null) {
                 call.respond(generateToken(hash))
             } else if (hash == null) {
-                call.respond(HttpStatusCode.BadRequest, "El hash es requerido")
+                call.respond(HttpStatusCode.BadRequest, "Hash is required")
             } else {
                 call.respond(HttpStatusCode.NotFound, hash)
             }
@@ -93,7 +93,7 @@ fun Application.initRoutes() {
                     // un pelín feo, pero así mostramos siempre el error que es..
                     call.respond(HttpStatusCode.BadRequest,
                         e.message?.split(":")?.get(1) ?:
-                        "Ha habido un error con la petición, revisa el json.")
+                        "There's something weird with that request, try it again..")
                 }
 
 
