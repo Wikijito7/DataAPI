@@ -76,3 +76,7 @@ If we're not authenticated, it will respond with a `401 Unauthorized`.
 * Hash expiring (customizable)
 * .env file outside of the jar
 * Something else?
+
+## Known bugs
+* SSL doesn't work atm.
+* Something else? Create a ticket [here](https://github.com/Wikijito7/DataAPI/issues)
