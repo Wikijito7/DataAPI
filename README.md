@@ -15,10 +15,10 @@ A custom API made in Ktor using Kotlin.
 
 ## How to run it
 * First of all, let's make sure we've got java install. To do so, run `java --version`, if we see a message like `openjdk 11.0.10 2021-01-19` or Oracle's version, it's fine, we can continue. If not, install the last java version and come back.
-* Execute the jar:
-    * Option 1: Download the latest jar uploaded, simple clicking [here](https://github.com/Wikijito7/DataAPI/releases/) 
+* Download the jar:
+    * Option 1: Download the latest jar uploaded, simply by clicking [here](https://github.com/Wikijito7/DataAPI/releases/) 
     * Option 2: Clone the project and compile the code. To do so, download it from the green button at the top or execute `git clone https://github.com/Wikijito7/DataAPI.git`. Once downloaded, we can modify some parameters of the [config](https://github.com/Wikijito7/DataAPI/blob/main/resources/application.conf) file or leave it as it is. After that, open a terminal and execute `./gradlew clean shadowJar` if you're in UNIX, Linux Distro or MacOS, or `./gradlew.bat clean shadowJar` if you're on Windows.
-* We're almost done! Now execute the jar, to do so open a terminal and execute `java -jar DataAPI-$version.jar`. Remember to replace `$version` with the version you're downloaded/compiled.
+* We're almost done! Now execute the jar, to do so open a terminal and execute `java -jar DataAPI-$version.jar`. Remember to replace `$version` with the version you've downloaded/compiled.
 * We've finished! Now you can start using the API.
 
 ## How it works
