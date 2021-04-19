@@ -7,6 +7,8 @@ import es.wokis.dataapi.models.Data
 import es.wokis.dataapi.models.Datas
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.sql.SQLException
+import kotlin.jvm.Throws
 
 class DataDAO : IDataDAO {
     override fun getDataList(hash: String): List<DataDTO>? {
@@ -26,13 +28,15 @@ class DataDAO : IDataDAO {
         return dataList
     }
 
-    override fun getDataList(hash: String, dataId: Int): DataDTO? {
+    override fun getData(hash: String, dataId: Int): DataDTO? {
         var image: DataDTO? = null
         val imageDB = getDataDB(hash, dataId)
 
         if (imageDB != null) {
-            image = DataDTO(imageDB.dataId, imageDB.title, imageDB.description,
-                imageDB.urlImage, imageDB.isFavorite)
+            image = DataDTO(
+                imageDB.dataId, imageDB.title, imageDB.description,
+                imageDB.urlImage, imageDB.isFavorite
+            )
         }
 
         return image
@@ -48,17 +52,20 @@ class DataDAO : IDataDAO {
 
             data = if (dataDB.size == 1) dataDB[0] else null
         }
-
         return data
     }
 
-    override fun insertData(hash: String, data: List<DataDTO>): Boolean {
+    override fun insertData(hash: String, data: List<DataDTO>): Boolean? {
         val credential: Credential = CredentialsDAO().findByHash(hash) ?: return false
-        var inserted = true
-        println(data)
+        val imageDb = this.getDataList(hash) ?: return false
+        var inserted: Boolean? = true
         transaction {
             for (image: DataDTO in data) {
                 try {
+                    if (imageDb.contains(image)) {
+                        throw SQLException("${image.id} is already on the db.")
+                    }
+
                     Data.new {
                         dataId = image.id
                         title = image.title
@@ -69,6 +76,9 @@ class DataDAO : IDataDAO {
                     }
                 } catch (e: ExposedSQLException) {
                     inserted = false
+                    break
+                } catch (e: SQLException) {
+                    inserted = null
                     break
                 }
             }

@@ -1,7 +1,6 @@
 package es.wokis
 
 import com.typesafe.config.ConfigFactory
-import es.wokis.dataapi.module
 import io.ktor.config.*
 import io.ktor.http.*
 import kotlin.test.*
@@ -20,6 +19,7 @@ class ApplicationTest {
         }
     }
 
+    // TODO: 19/04/21 ADD MORE TESTS
     @Test
     fun testRoot() {
         with(engine) {

@@ -1,5 +1,6 @@
 package es.wokis.dataapi.models
 
+import io.ktor.auth.*
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -12,8 +13,9 @@ object Credentials : IntIdTable() {
 }
 
 // DAO
-class Credential(id: EntityID<Int>): IntEntity(id) {
-    companion object: IntEntityClass<Credential>(Credentials)
+class Credential(id: EntityID<Int>) : IntEntity(id), Principal {
+    companion object : IntEntityClass<Credential>(Credentials)
+
     var hash by Credentials.hash
     var createdOn by Credentials.createdOn
     override fun toString(): String {

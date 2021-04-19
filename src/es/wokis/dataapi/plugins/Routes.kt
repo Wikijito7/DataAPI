@@ -17,6 +17,9 @@ import es.wokis.dataapi.utils.user
 import io.ktor.request.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.lang.IllegalArgumentException
+import java.lang.NumberFormatException
+import java.sql.SQLException
 
 private val credentialsDao = CredentialsDAO()
 private val dataDAO = DataDAO()
@@ -25,9 +28,10 @@ private val gson = Gson()
 fun Application.initRoutes() {
     routing {
         get("/") {
-            call.respond(HttpStatusCode.OK,"HELLO WORLD!")
+            call.respond(HttpStatusCode.OK, "HELLO WORLD!")
         }
-        get("/token") {
+
+        get("/token/") {
             val generatedHash = HashGenerator.generateHash(12L)
             val token = generateToken(generatedHash)
             val tokenHashDTO = TokenHashDTO(generatedHash, token)
@@ -37,7 +41,7 @@ fun Application.initRoutes() {
             }
         }
 
-        get ("/token/{hash}") {
+        get("/token/{hash}/") {
             val hash = call.parameters["hash"]
             if (hash != null && credentialsDao.getHash(hash) != null) {
                 call.respond(generateToken(hash))
@@ -48,6 +52,84 @@ fun Application.initRoutes() {
             }
         }
 
+        get("/data/{hash}/") {
+            val hash = call.parameters["hash"]
+            if (hash != null) {
+                val dataList = dataDAO.getDataList(hash)
+                if (dataList != null) {
+                    call.respond(HttpStatusCode.OK, dataList)
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "$hash doesn't exists.")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest,
+                        "Client-id is required")
+            }
+        }
+
+        post("/data/{hash}/") {
+            val hash = call.parameters["hash"]
+
+            try {
+                // primero la string, luego lista objetos, así GSON está contento.. facepalm
+                // NOTA: Ktor ha decidido que UTF-8 no sea el encoding principal.. yay
+                // tiramos de asincronía para poder mantener el encoding.. because why not ktor
+                withContext(Dispatchers.IO) {
+                    val json = call.receiveTextWithCorrectEncoding()
+                    val dataListJson = Gson().fromJson(json, Array<DataDTO>::class.java).toList()
+                    if (hash != null) {
+
+                        when (dataDAO.insertData(hash, dataListJson)) {
+                            null -> {
+                                call.respond(HttpStatusCode.Conflict,
+                                        "Data already on database")
+                            }
+
+                            true -> {
+                                call.respond(HttpStatusCode.OK, gson.toJson(dataListJson))
+                            }
+
+                            else -> {
+                                call.respond(HttpStatusCode.BadRequest)
+                            }
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
+                // un pelín feo, pero así mostramos siempre el error que es..
+                call.respond(HttpStatusCode.BadRequest,
+                        e.message?.split(":")?.get(1)
+                                ?: "There's something weird with that request, try it again..")
+            }
+        }
+
+        put("/data/{hash}/{id}/") {
+            try {
+                val dataId = call.parameters["id"]?.toInt()
+                val hash = call.parameters["hash"]
+
+                if (hash != null && dataId != null) {
+                    if (dataDAO.updateData(dataId, hash)) {
+                        call.respond(HttpStatusCode.OK,
+                                gson.toJson(dataDAO.getData(hash, dataId)))
+                    } else {
+                        call.respond(HttpStatusCode.NotFound,
+                                "Are you sure it exists? client-id: $hash, dataId: $dataId")
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest,
+                            "Client-id and Data-id are required")
+                }
+            } catch (e: NumberFormatException) {
+                call.respond(HttpStatusCode.BadRequest,
+                        "The second argument MUST be a number, received: " +
+                                "${e.message?.split(":")?.get(1)}")
+            }
+
+        }
+
+        // TODO: 19/04/21 REMOVE THIS SECTION ON UPDATE 1.2
         authenticate {
             post("/hash") {
                 call.respond(HttpStatusCode.OK, "${call.user?.hash}")
@@ -79,12 +161,20 @@ fun Application.initRoutes() {
                         val dataListJson = Gson().fromJson(json, Array<DataDTO>::class.java).toList()
                         val hash = call.user?.hash
                         if (hash != null) {
-                            val dataList = dataDAO.insertData(hash, dataListJson)
 
-                            if (dataList){
-                                call.respond(HttpStatusCode.OK, gson.toJson(dataListJson))
-                            } else {
-                                call.respond(HttpStatusCode.BadRequest)
+                            when (dataDAO.insertData(hash, dataListJson)) {
+                                true -> {
+                                    call.respond(HttpStatusCode.OK, gson.toJson(dataListJson))
+                                }
+
+                                false -> {
+                                    call.respond(HttpStatusCode.BadRequest)
+                                }
+
+                                else -> {
+                                    call.respond(HttpStatusCode.Conflict,
+                                            "Data already on database")
+                                }
                             }
                         }
                     }
@@ -92,8 +182,12 @@ fun Application.initRoutes() {
                 } catch (e: JsonSyntaxException) {
                     // un pelín feo, pero así mostramos siempre el error que es..
                     call.respond(HttpStatusCode.BadRequest,
-                        e.message?.split(":")?.get(1) ?:
-                        "There's something weird with that request, try it again..")
+                            e.message?.split(":")?.get(1)
+                                    ?: "There's something weird with that request, try it again..")
+                } catch (e: IllegalArgumentException) {
+                    call.respond(HttpStatusCode.BadRequest,
+                            e.message?.split(":")?.get(1)
+                                    ?: "There's something weird with that request, try it again..")
                 }
 
 
@@ -106,7 +200,7 @@ fun Application.initRoutes() {
                 if (hash != null) {
                     if (dataDAO.updateData(data, hash)) {
                         call.respond(HttpStatusCode.OK,
-                            gson.toJson(dataDAO.getDataList(hash, data.id) ?: ""))
+                                gson.toJson(dataDAO.getData(hash, data.id) ?: ""))
                     } else {
                         call.respond(HttpStatusCode.NotFound,
                             "No data found")
@@ -121,7 +215,7 @@ fun Application.initRoutes() {
                 if (hash != null && dataId != null) {
                     if (dataDAO.updateData(dataId, hash)) {
                         call.respond(HttpStatusCode.OK,
-                            gson.toJson(dataDAO.getDataList(hash, dataId) ?: ""))
+                                gson.toJson(dataDAO.getData(hash, dataId) ?: ""))
                     } else {
                         call.respond(HttpStatusCode.NotFound,
                             "Are you sure it exists? dataId: $dataId")

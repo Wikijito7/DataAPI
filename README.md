@@ -32,10 +32,20 @@ Let's see the routing closely.
 
 #### Get
 * `/`: `HELLO WORLD!`. We can use this direction to make sure we can communicate with the API.
-* `/token`: This is how we obtain our token and a hash. The hash is our client-id, we can obtain our token with the hash, and the hash with the token. **DO NOT LOSE THEM**, once lost, we cannot access to our data.
-* `/token/{hash}`: As i mentioned before, we can obtain our token if we know our hash. This is the way.
-### Requests WITH Auth
+* `/token/`: This is how we obtain our token and a hash. The hash is our client-id, we can obtain our token with the hash, and the hash with the token. **DO NOT LOSE THEM**, once lost, we cannot access to our data.
+* `/token/{hash}/`: As i mentioned before, we can obtain our token if we know our hash. This is the way.
+* `/data/{client-id}/`: It returns the data of the client-id. It can return `400 Client-id is required` if the client-id is null, `404 Not Found` if client-id doesn't exists.
+
+#### Post
+* `/data/{client-id}/`: It uploads the data signed with the client-id. It can return `400 Bad request`, `409 Conflict` if data already exists.
+
+#### Put
+* `/data/{client-id}/{id}/`: It updates isFavorite from the given id. More info [here](https://github.com/Wikijito7/DataAPI#put)
+### Requests WITH Auth 
 If we're not authenticated, it will respond with a `401 Unauthorized`.
+
+**Deprecated**: auth-based requests will be removed at version 1.2
+
 #### Get
 * `/data`: It responds with the data in a list, even if it is empty. It can respond with a `404 Not Found` if somehow the token is valid but the hash doesn't exists in the database.
 

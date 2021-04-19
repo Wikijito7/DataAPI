@@ -12,6 +12,7 @@ import io.ktor.auth.jwt.*
 
 private lateinit var algorithm: Algorithm
 
+@Deprecated("It will have support up to version 1.2")
 fun Application.initAuth() {
     val jwtRealm = environment.config.property("jwt.realm").getString()
     val secretKey = environment.config.property("secretkey").getString()
@@ -26,8 +27,7 @@ fun Application.initAuth() {
                 if (hash != null) {
                     val credentialObj = CredentialsDAO().findByHash(hash)
 
-                    if (credentialObj != null)
-                        CredentialsDTO(credentialObj.hash) else null
+                    credentialObj
                 } else null
             }
         }
@@ -39,6 +39,13 @@ private fun makeJwtVerifier() : JWTVerifier = JWT
     .require(algorithm)
     .build()
 
+/**
+ * Generates a new token to use it as authentication
+ * @param hash the client-id, generated randomly.
+ * @return the given token for the hash.
+ * @Deprecated this function will disappear on version 1.2
+ * */
+@Deprecated("It will have support up to version 1.2")
 fun generateToken(hash: String): String = JWT.create()
     .withSubject("Authentification")
     .withClaim("token", hash)
