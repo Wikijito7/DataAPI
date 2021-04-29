@@ -1,0 +1,281 @@
+[
+    {
+        "path": "/",
+        "method": "GET",
+        "args": [],
+        "description": "We can use this direction to make sure we can communicate with the API.",
+        "returns": "Hello World!",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            }
+        ]
+    },
+    {
+        "path": "/token/",
+        "method": "GET",
+        "args": [],
+        "description": "This is how we obtain our token and a hash. The hash is our client-id, we can obtain our token with the hash, and the hash with the token. DO NOT LOSE THEM, once lost, we cannot access to our data.",
+        "returns": "An object with a client-id and the JWT's token ",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            }
+        ]
+    },
+    {
+        "path": "/token/{client-id}/",
+        "method": "GET",
+        "args": [
+            {
+                "client-id": "The client-id given when we first registered on the app."
+            }
+        ],
+        "description": "We can obtain our token if we know our client-id. This is the way.",
+        "returns": "The token of the given client-id",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            }
+        ]
+    },
+    {
+        "path": "/data/{client-id}/",
+        "method": "GET",
+        "args": [
+            {
+                "client-id": "The client-id given when we first registered on the app."
+            }
+        ],
+        "description": " It returns the data of the client-id.",
+        "returns": "List of Data Objects.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 400,
+                "description": "Client-id is required."
+            },
+            {
+                "code": 404,
+                "description": "Client-id doesn't exists."
+            }
+        ]
+    },
+    {
+        "path": "/data/{client-id}/",
+        "method": "POST",
+        "args": [
+            {
+                "client-id": "The client-id given when we first registered on the app."
+            }
+        ],
+        "description": "It uploads the data signed with the client-id.",
+        "returns": "List of Data Objects.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 400,
+                "description": "Client-id is required."
+            },
+            {
+                "code": 409,
+                "description": "Data already exists."
+            }
+        ]
+    },
+    {
+        "path": "/data/{client-id}/{id}",
+        "method": "PUT",
+        "args": [
+            {
+                "client-id": "The client-id given when we first registered on the app."
+            },
+            {
+                "id": "The data id to modify"
+            }
+        ],
+        "description": "It updates isFavorite from the given id. If it was false, transforms it to true, and the other way around. ",
+        "returns": "The updated data object.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 400,
+                "description": "Client-id is required."
+            },
+            {
+                "code": 404,
+                "description": "Data object not found."
+            }
+        ]
+    },
+    {
+        "path": "/data",
+        "method": "GET",
+        "args": [],
+        "description": "Responds with the data in a list, even if it is empty.",
+        "returns": "Data list of given user",
+        "auth": true,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 401,
+                "description": "Auth is required."
+            },
+            {
+                "code": 404,
+                "description": "Token is valid but it doesn't exists"
+            }
+        ]
+    },
+    {
+        "path": "/data",
+        "method": "POST",
+        "args": [],
+        "description": "Upload data to the API. You can upload as many data as you want, always as a list.",
+        "returns": "The uploaded data list.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 400,
+                "description": "Wrong request."
+            },
+            {
+                "code": 401,
+                "description": "Auth is required."
+            }
+        ]
+    },
+    {
+        "path": "/hash",
+        "method": "POST",
+        "args": [],
+        "description": "This is the way to get our client-id.",
+        "returns": "The client-id of the token.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 401,
+                "description": "Auth is required."
+            },
+            {
+                "code": 404,
+                "description": "Token doesn't exists."
+            }
+        ]
+    },
+    {
+        "path": "/data",
+        "method": "PUT",
+        "args": [],
+        "description": "It updates the entire data object given, using the ID as item's identificator, so it cannot be changed.",
+        "returns": "The updated data object.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 400,
+                "description": "Wrong request."
+            },
+            {
+                "code": 401,
+                "description": "Auth is required."
+            },
+            {
+                "code": 404,
+                "description": "Data object doesn't exists."
+            }
+        ]
+    },
+    {
+        "path": "/data/{id}",
+        "method": "PUT",
+        "args": [
+            {
+                "id": "The data id to modify"
+            }
+        ],
+        "description": "It updates the entire data object given, using the ID as item's identificator, so it cannot be changed.",
+        "returns": "The updated data object.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 400,
+                "description": "Wrong request."
+            },
+            {
+                "code": 401,
+                "description": "Auth is required."
+            },
+            {
+                "code": 404,
+                "description": "Data object doesn't exists."
+            }
+        ]
+    },
+    {
+        "path": "/data/{id}",
+        "method": "DELETE",
+        "args": [
+            {
+                "id": "The data id to modify"
+            }
+        ],
+        "description": "Deletes the item that has the given id. Once deleted it cannot be recovered.",
+        "returns": "The removed item's id.",
+        "auth": false,
+        "codes": [
+            {
+                "code": 200,
+                "description": "Ok"
+            },
+            {
+                "code": 400,
+                "description": "Wrong request."
+            },
+            {
+                "code": 401,
+                "description": "Auth is required."
+            },
+            {
+                "code": 404,
+                "description": "Data object doesn't exists."
+            }
+        ]
+    }
+]
